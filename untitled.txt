@@ -77,14 +77,14 @@ local Psalms = {
         SelectedPart = "HumanoidRootPart",
         AirPart = "RightFoot",
         
-        HorizontalPrediction = 0.1,
+        HorizontalPrediction = 0.167913,
         VerticalPrediction = 0.1,
-        HorizontalPrediction2 = 0.1,
+        HorizontalPrediction2 = 0.167913,
         VerticalPrediction2 = 0.1,
         
-        jumpoffset = 0,
-        jumpoffset2 = -0.3,
-        jumpoffset3 = 0.270,
+        jumpoffset = -0.06,
+        jumpoffset2 = -0.06,
+        jumpoffset3 = -0.06,
         
         ShootDelay = 0.22,
         NoGroundShot = false,
@@ -128,7 +128,7 @@ MacroDanceDelay = 0.300,
     }
 }
 
-Psalms.Tech.SelectedPart = Psalms.Tech.RealPart
+Sileana.SelectedPart = Sileana.RealPart
 
 
 
@@ -1222,7 +1222,7 @@ local updateTargetHealth = LPH_NO_VIRTUALIZE(function()
                 local damageDealt = targetHealth - currentHealth
                 local damageText = string.format("%d", math.round(damageDealt))
                 local remainingValue = string.format("%d", math.max(currentHealth, 0))
-                local selectedPart = tostring(Psalms.Tech.SelectedPart)
+                local selectedPart = tostring(Sileana.SelectedPart)
 
                 if Hitnotify then
                     local realColor = "#" .. Library.Accent:ToHex()
@@ -1269,7 +1269,7 @@ getgenv().crosshair.spin = false
 
 RunService.PostSimulation:Connect(LPH_JIT(function()
     if getgenv().crosshair.sticky and TargetPlr and TargetPlr.Character then
-        local TargetPart = TargetPlr.Character:FindFirstChild(Psalms.Tech.SelectedPart)
+        local TargetPart = TargetPlr.Character:FindFirstChild(Sileana.SelectedPart)
         if TargetPart then
             local Position = Camera:WorldToViewportPoint(TargetPart.Position)
             getgenv().crosshair.mode = 'custom'
@@ -1283,7 +1283,7 @@ RunService.PostSimulation:Connect(LPH_JIT(function()
 end))
 
 local TargetFuturePosition = LPH_NO_VIRTUALIZE(function()
-    local selectedPart = Psalms.Tech.SelectedPart
+    local selectedPart = Sileana.SelectedPart
     local targetPart = TargetPlr.Character[selectedPart]
 
     if targetPart then
@@ -1292,8 +1292,8 @@ local TargetFuturePosition = LPH_NO_VIRTUALIZE(function()
 
         local velocity = Vector3.new(0, 0, 0)
         
-        if Psalms.Tech.ResolverEnabled then
-            if Psalms.Tech.RESOLVER == "Recalculate" then
+        if Sileana.ResolverEnabled then
+            if Sileana.RESOLVER == "Recalculate" then
                 if lastPos then
                     local delta = currentTick - lastTick
                     if delta > 0 then
@@ -1303,31 +1303,31 @@ local TargetFuturePosition = LPH_NO_VIRTUALIZE(function()
                 end
                 lastPos = currentPos
                 lastTick = currentTick
-            elseif Psalms.Tech.RESOLVER == "MoveDirection" then
+            elseif Sileana.RESOLVER == "MoveDirection" then
                 velocity = TargetPlr.Character.Humanoid.MoveDirection * TargetPlr.Character.Humanoid.WalkSpeed
-            elseif Psalms.Tech.RESOLVER == "LookVector" then
-                velocity = targetPart.CFrame.LookVector * Psalms.Tech.HorizontalPrediction * 1.5
+            elseif Sileana.RESOLVER == "LookVector" then
+                velocity = targetPart.CFrame.LookVector * Sileana.HorizontalPrediction * 1.5
             end
         else
             velocity = targetPart.AssemblyLinearVelocity
         end
 
-        local horizontalPrediction = Psalms.Tech.HorizontalPrediction
-        local verticalPrediction = Psalms.Tech.VerticalPrediction
-        local jumpOffset = Psalms.Tech.jumpoffset or 0
+        local horizontalPrediction = Sileana.HorizontalPrediction
+        local verticalPrediction = Sileana.VerticalPrediction
+        local jumpOffset = Sileana.jumpoffset or 0
 
-        if Psalms.Tech.UseVertical then
+        if Sileana.UseVertical then
             return Vector3.new(
                 currentPos.X + (velocity.X / horizontalPrediction),
                 currentPos.Y + (velocity.Y / verticalPrediction),
                 currentPos.Z + (velocity.Z / horizontalPrediction)
-            ) + Vector3.new(0, Psalms.Tech.jumpoffset, 0)
+            ) + Vector3.new(0, Sileana.jumpoffset, 0)
         else
                        return Vector3.new(
                 currentPos.X + (velocity.X * horizontalPrediction),
                 currentPos.Y + (velocity.Y * verticalPrediction),
                 currentPos.Z + (velocity.Z * horizontalPrediction)
-            ) + Vector3.new(0, Psalms.Tech.jumpoffset, 0)
+            ) + Vector3.new(0, Sileana.jumpoffset, 0)
         end
     end
 
@@ -1572,7 +1572,7 @@ if bullet_path then
 end
 
 getgenv().esp = {
-TargetOnly = false,
+TargetOnly = true,
     AutoStep = true, -- automatically updates the esp, you can disable this and use Player:Step() if you want to manually update them
     CharacterSize = Vector3.new(4, 5.75, 1.5),
     CharacterOffset = CFrame.new(0, -0.25, 0),
@@ -1580,25 +1580,25 @@ TargetOnly = false,
 
     PriorityColor = Color3.new(1,0.25,0.25),
 
-    BoxEnabled = false,
-    BoxCorners = false,
-    BoxDynamic = false,
+    BoxEnabled = true,
+    BoxCorners = true,
+    BoxDynamic = true,
     BoxStaticXFactor = 1.3,
     BoxStaticYFactor = 1.6,
     BoxColor = Color3.fromRGB(255, 255, 255),
     
-    SkeletonEnabled = false,
+    SkeletonEnabled = true,
     SkeletonColor = Color3.fromRGB(255, 255, 255),
     SkeletonMaxDistance = 300,
 
-    ChamsEnabled = false,
+    ChamsEnabled = true,
     ChamsInnerColor = Color3.fromRGB(105, 105, 105),
     ChamsOuterColor = Color3.fromRGB(0, 0, 0),
     ChamsInnerTransparency = 0.5,
     ChamsOuterTransparency = 0.5,
 
 
-    TextEnabled = false,
+    TextEnabled = true,
     TextColor = Color3.fromRGB(255, 255, 255),
     TextLayout = {
         ['nametag']  = { enabled = true, position = 'top', order = 1 },
@@ -2129,9 +2129,9 @@ end))
 
 
 if game.PlaceId == 9825515356 or game.PlaceId == 2788229376 then
-    Psalms.Tech.LockType = "Index"
+    Sileana.LockType = "Index"
 else
-    Psalms.Tech.LockType = "Namecall"
+    Sileana.LockType = "Namecall"
 end
 
 local lastPosition = nil
@@ -2156,7 +2156,7 @@ end))
    
 
 
-Psalms.Tech.RESOLVER = "MoveDirection"
+Sileana.RESOLVER = "MoveDirection"
 
 local lastTick = tick()
 local lastPos = nil
@@ -2170,7 +2170,7 @@ if game.PlaceId == 9825515356 then
     end
 
     RunService.PostSimulation:Connect(function(DeltaTime)
-        if Psalms.Tech.Enabled and Psalms.Tech.LockType == "Index" and FrameworkEnvironment and TargetPlr then
+        if Sileana.Enabled and Sileana.LockType == "Index" and FrameworkEnvironment and TargetPlr then
             FrameworkEnvironment._G.MOUSE_POSITION = TargetFuturePosition()
         end
     end)
@@ -2178,7 +2178,7 @@ else
     local Hooks = {}
     local mouse = game.Players.LocalPlayer:GetMouse()
         Hooks[1] = hookmetamethod(mouse, "__index", newcclosure(function(self, index)
-            if index == "Hit" and Psalms.Tech.LockType == "Index" and Psalms.Tech.Enabled and TargetPlr and TargetPlr.Character and Psalms.Tech.SelectedPart then
+            if index == "Hit" and Sileana.LockType == "Index" and Sileana.Enabled and TargetPlr and TargetPlr.Character and Sileana.SelectedPart then
                 local TargetFuturePosition = TargetFuturePosition()
                 if TargetFuturePosition then
                     return CFrame.new(TargetFuturePosition)
@@ -2203,12 +2203,12 @@ mt.__namecall = newcclosure(function(...)
     local args = {...}
     local method = getnamecallmethod()
 
-    if Psalms.Tech.Enabled and Psalms.Tech.LockType == "Namecall" then
+    if Sileana.Enabled and Sileana.LockType == "Namecall" then
         if TargetPlr and TargetPlr.Character and method == "FireServer" then
             for _, methodName in ipairs(Argumen) do
                 if args[2] == methodName then
                     Argument = methodName
-                    if not Psalms.Tech.AntiAimViewer then
+                    if not Sileana.AntiAimViewer then
                         args[3] = TargetFuturePosition()
                         return old(unpack(args))
                     end
@@ -2242,7 +2242,7 @@ local function CharAdded()
             if tool:IsA("Tool") then
                 tool.Activated:Connect(function()
                     if MainEvent and Argument then
-                        if Psalms.Tech.Enabled and TargetPlr and TargetPlr.Character and Psalms.Tech.AntiAimViewer then
+                        if Sileana.Enabled and TargetPlr and TargetPlr.Character and Sileana.AntiAimViewer then
                             local AimPosition = TargetFuturePosition()
                             MainEvent:FireServer(Argument, AimPosition)
                         end
@@ -2303,7 +2303,7 @@ e.Adornee = adorneePart
 e.Parent = workspace
 
 RunService.RenderStepped:Connect(LPH_JIT(function()
-    if TargetPlr and TargetPlr.Character and Psalms.Tech.VelocityDot and TargetPlr.Character:FindFirstChild(Psalms.Tech.SelectedPart) then
+    if TargetPlr and TargetPlr.Character and Sileana.VelocityDot and TargetPlr.Character:FindFirstChild(Sileana.SelectedPart) then
         local pos = TargetFuturePosition()
         adorneePart.Transparency = 0
         adorneePart.Position = pos
@@ -2315,7 +2315,7 @@ RunService.RenderStepped:Connect(LPH_JIT(function()
     end
 end)) 
 
-local targetSigm99928 = Psalms.Tech.ShootDelay 
+local targetSigm99928 = Sileana.ShootDelay 
 local targetSigmaPOBALLs = nil
 local Shot2ing = false
 
@@ -2327,7 +2327,7 @@ local checkTarget = LPH_NO_VIRTUALIZE(function()
         if humanoid and humanoidRootPart then
             local SigmaAir = humanoid:GetState() == Enum.HumanoidStateType.Freefall
 
-            if SigmaAir and Psalms.Tech.AutoAir then
+            if SigmaAir and Sileana.AutoAir then
                 if not targetSigmaPOBALLs then
                     targetSigmaPOBALLs = tick()
                 else
@@ -2477,29 +2477,29 @@ local updatePredictionValue = LPH_NO_VIRTUALIZE(function()
         return clVa
     end
 
-    if Psalms.Tech.CamAutoprediction then
+    if Sileana.CamAutoprediction then
         local clVa = fiCl(sigma_table)
         if clVa then
-            Psalms.Tech.CamPrediction1, Psalms.Tech.CamPrediction2 = clVa, clVa
+            Sileana.CamPrediction1, Sileana.CamPrediction2 = clVa, clVa
         end
     end
 
-    if pg and Psalms.Tech.AutoPrediction then
-        local mo, clVa = Psalms.Tech.APMODE
+    if pg and Sileana.AutoPrediction then
+        local mo, clVa = Sileana.APMODE
         if mo == "Default" or mo == "Sets Based" then
             clVa = fiCl(mo == "Sets Based" and predictionTable or sigma_table)
             if clVa then
-                Psalms.Tech.HorizontalPrediction, Psalms.Tech.VerticalPrediction = clVa, clVa * (mo == "Sets Based" and 0.910 or 1)
+                Sileana.HorizontalPrediction, Sileana.VerticalPrediction = clVa, clVa * (mo == "Sets Based" and 0.910 or 1)
             end
         elseif mo == "Math Based" then
             local function gePr(fa, ad) 
     return fa * math.log(pg + 1) + ad 
 end
-Psalms.Tech.HorizontalPrediction = gePr(0.105, -0.342665)
-Psalms.Tech.VerticalPrediction = gePr(0.1, -0.3405)
+Sileana.HorizontalPrediction = gePr(0.105, -0.342665)
+Sileana.VerticalPrediction = gePr(0.1, -0.3405)
         elseif mo == "Calculate" then
             local calcValue = calculate(pg)
-            Psalms.Tech.HorizontalPrediction, Psalms.Tech.VerticalPrediction = calcValue, calcValue
+            Sileana.HorizontalPrediction, Sileana.VerticalPrediction = calcValue, calcValue
         end
     end
 end)
@@ -2509,7 +2509,7 @@ local  LookAtPlayer = LPH_NO_VIRTUALIZE(function(tg)
     local lrp, lh = lc:FindFirstChild("HumanoidRootPart"), lc:FindFirstChildOfClass("Humanoid")
 
     if lh and lrp then
-        if Psalms.Tech and Psalms.Tech.LookAt and not Psalms.Tech.Macroing then
+        if Sileana and Sileana.LookAt and not Sileana.Macroing then
             if tg and tg.Character then
                 local trp, th = tg.Character:FindFirstChild("HumanoidRootPart"), tg.Character:FindFirstChildOfClass("Humanoid")
 
@@ -2530,9 +2530,9 @@ local  LookAtPlayer = LPH_NO_VIRTUALIZE(function(tg)
 end) 
 
 local ViewTarget = LPH_NO_VIRTUALIZE(function()
-    if TargetPlr and TargetPlr.Character and Psalms.Tech.ViewAt then
+    if TargetPlr and TargetPlr.Character and Sileana.ViewAt then
         Camera.CameraSubject = TargetPlr.Character.Humanoid
-    elseif not TargetAimbot.CSync.Visualize and not TargetPlr and not  Psalms.Tech.ViewAt and LocalPlayer.Character:FindFirstChild("Humanoid") then
+    elseif not TargetAimbot.CSync.Visualize and not TargetPlr and not  Sileana.ViewAt and LocalPlayer.Character:FindFirstChild("Humanoid") then
         Camera.CameraSubject = LocalPlayer.Character.Humanoid
     end
 end) 
@@ -2543,13 +2543,13 @@ local inAir = LPH_NO_VIRTUALIZE(function()
         local state = TargetPlr.Character.Humanoid:GetState()
 
         if state == Enum.HumanoidStateType.Freefall then
-            Psalms.Tech.jumpoffset = Psalms.Tech.jumpoffset3
-                Psalms.Tech.SelectedPart = Psalms.Tech.AirPart
+            Sileana.jumpoffset = Sileana.jumpoffset3
+                Sileana.SelectedPart = Sileana.AirPart
         elseif state == Enum.HumanoidStateType.Jumping then
-            Psalms.Tech.jumpoffset = Psalms.Tech.jumpoffset2
+            Sileana.jumpoffset = Sileana.jumpoffset2
         else
-            Psalms.Tech.SelectedPart = Psalms.Tech.RealPart
-            Psalms.Tech.jumpoffset = 0
+            Sileana.SelectedPart = Sileana.RealPart
+            Sileana.jumpoffset = 0
         end
     end
 end)
@@ -2557,7 +2557,7 @@ end)
 
 
 local function autospam()
-    if Psalms.Tech.AutoShoot and LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
+    if Sileana.AutoShoot and LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
         if  not TargetPlr.Character:FindFirstChildOfClass("ForceField") then
             LocalPlayer.Character:FindFirstChildOfClass("Tool"):Activate()
         end
@@ -2680,47 +2680,47 @@ end
 
 
 RunService.Heartbeat:Connect(LPH_JIT(function()
-    if Psalms.Tech.Camera and TargetPlr and TargetPlr.Character and Psalms.Tech.SelectedPart then
-        if TargetPlr.Character[Psalms.Tech.SelectedPart] then
+    if Sileana.Camera and TargetPlr and TargetPlr.Character and Sileana.SelectedPart then
+        if TargetPlr.Character[Sileana.SelectedPart] then
 
 
 
-            Psalms.Tech.velocity = Psalms.Tech.CamResolverEnabled 
+            Sileana.velocity = Sileana.CamResolverEnabled 
                 and Recalculate(TargetPlr.Character) 
-                or TargetPlr.Character[Psalms.Tech.SelectedPart].AssemblyLinearVelocity
+                or TargetPlr.Character[Sileana.SelectedPart].AssemblyLinearVelocity
 
-            Psalms.Tech.targetPosition = Psalms.Tech.UseExternal 
+            Sileana.targetPosition = Sileana.UseExternal 
                 and Vector3.new(
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.X + (Psalms.Tech.velocity.X / Psalms.Tech.CamPrediction1),
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.Y + (Psalms.Tech.velocity.Y / Psalms.Tech.CamPrediction2),
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.Z + (Psalms.Tech.velocity.Z / Psalms.Tech.CamPrediction1)
+                    TargetPlr.Character[Sileana.SelectedPart].Position.X + (Sileana.velocity.X / Sileana.CamPrediction1),
+                    TargetPlr.Character[Sileana.SelectedPart].Position.Y + (Sileana.velocity.Y / Sileana.CamPrediction2),
+                    TargetPlr.Character[Sileana.SelectedPart].Position.Z + (Sileana.velocity.Z / Sileana.CamPrediction1)
                 )
                 or Vector3.new(
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.X + (Psalms.Tech.velocity.X * Psalms.Tech.CamPrediction1),
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.Y + (Psalms.Tech.velocity.Y * Psalms.Tech.CamPrediction2),
-                    TargetPlr.Character[Psalms.Tech.SelectedPart].Position.Z + (Psalms.Tech.velocity.Z * Psalms.Tech.CamPrediction1)
+                    TargetPlr.Character[Sileana.SelectedPart].Position.X + (Sileana.velocity.X * Sileana.CamPrediction1),
+                    TargetPlr.Character[Sileana.SelectedPart].Position.Y + (Sileana.velocity.Y * Sileana.CamPrediction2),
+                    TargetPlr.Character[Sileana.SelectedPart].Position.Z + (Sileana.velocity.Z * Sileana.CamPrediction1)
                 )
 
-if Psalms.Tech.CamWallCheck and BehindWall(TargetPlr) then
+if Sileana.CamWallCheck and BehindWall(TargetPlr) then
                 return
             end
 
-            if Psalms.Tech.CAMKo and isPlayerKO(TargetPlr) then
+            if Sileana.CAMKo and isPlayerKO(TargetPlr) then
                 return
             end
 
             Camera.CFrame = Camera.CFrame:Lerp(
-                CFrame.new(Camera.CFrame.Position, Psalms.Tech.targetPosition), 
-                Psalms.Tech.smoothness or 0.1, 
-                Enum.EasingStyle[Psalms.Tech.easingStyle], 
-                Enum.EasingDirection[Psalms.Tech.easingDirection]
+                CFrame.new(Camera.CFrame.Position, Sileana.targetPosition), 
+                Sileana.smoothness or 0.1, 
+                Enum.EasingStyle[Sileana.easingStyle], 
+                Enum.EasingDirection[Sileana.easingDirection]
             )
         end
     end
 end))
 
 LocalPlayer.Character:WaitForChild("Humanoid").StateChanged:Connect(function(old, new)
-    if Psalms.Tech.JumpBreak and new == Enum.HumanoidStateType.Freefall then
+    if Sileana.JumpBreak and new == Enum.HumanoidStateType.Freefall then
         task.wait(0.17)
         LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, -15, 0)
     end
@@ -2819,7 +2819,7 @@ local connection
 
 local tool_activated = function(character)
     character.ChildAdded:Connect(function(child)
-        if Psalms.Tech.bool_at_tp then
+        if Sileana.bool_at_tp then
             if child:IsA("Tool") then
                 connection = child.Activated:Connect(function()
                     bool_at_tp_tool(child)
@@ -2847,11 +2847,11 @@ tool_activated(LocalPlayer.Character)
 RunService.Heartbeat:Connect(LPH_JIT(function()
    updateBreatheEffect()
 
- if Psalms.Tech.cframespeedtoggle and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+ if Sileana.cframespeedtoggle and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
         local humanoidRootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
         local moveDirection = game.Players.LocalPlayer.Character.Humanoid.MoveDirection
         
-        humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection * (Psalms.Tech.speedvalue / 0.5)
+        humanoidRootPart.CFrame = humanoidRootPart.CFrame + moveDirection * (Sileana.speedvalue / 0.5)
     end
 end)) 
 
@@ -3120,23 +3120,23 @@ local function findClosestPlayer()
             continue
         end
 
-if Psalms.Tech.FriendCheck and player:IsFriendsWith(Plr.UserId) then
+if Sileana.FriendCheck and player:IsFriendsWith(Plr.UserId) then
                 continue
             end
 
-if Psalms.Tech.TeamCheck and isPlayerOnSameTeam(Plr) then
+if Sileana.TeamCheck and isPlayerOnSameTeam(Plr) then
     continue
 end
 
-            if Psalms.Tech.KOCheck and isPlayerKO(Plr) then
+            if Sileana.KOCheck and isPlayerKO(Plr) then
                 continue
             end
 
-            if Psalms.Tech.SeatedCheck and isPlayerSeated(Plr) then
+            if Sileana.SeatedCheck and isPlayerSeated(Plr) then
                 continue
             end
 
-            if Psalms.Tech.WallCheck and BehindWall(Plr) then
+            if Sileana.WallCheck and BehindWall(Plr) then
                 continue
             end
 
@@ -3161,7 +3161,7 @@ end
 end
 
 RunService.Heartbeat:Connect(LPH_JIT(function()
-    if Psalms.Tech.SilentMode then
+    if Sileana.SilentMode then
         TargetPlr = findClosestPlayer()
         if TargetPlr and TargetPlr.Character then
             local playerHumanoid = TargetPlr.Character:FindFirstChild("Humanoid")
@@ -3207,7 +3207,7 @@ end
 local RealColor = "#" .. Library.Accent:ToHex()
 
 local Window = Library:Window({
-    Name = 'Psalms.<font color="'..RealColor..'">Tech</font> | '..guh..' | '..dick..' | <font color="'..RealColor..'">'..role..'</font>',
+    Name = 'Sileana.<font color="'..RealColor..'">.lua</font> | '..guh..' | '..dick..' | <font color="'..RealColor..'">'..role..'</font>',
     Amount = 4
 })
 
@@ -3216,7 +3216,7 @@ local Window = Library:Window({
 
 
 
-local Watermark = Library:Watermark({Name = string.format("ðŸ¤‘ Psalms.Tech ðŸ¤‘")})
+local Watermark = Library:Watermark({Name = string.format("ðŸ¤‘ Sileana ðŸ¤‘")})
 
 
 
@@ -3306,7 +3306,7 @@ TargetAimSection:Toggle({
     Name = "Enabled",
 Flag = "Lock",
     Callback = function(a)
-        Psalms.Tech.Enabled = a
+        Sileana.Enabled = a
     end
 })
 
@@ -3314,14 +3314,14 @@ TargetAimSection:Toggle({
     Name = "Look At",
 Flag = "LookAt",
     Callback = function(a)
-        Psalms.Tech.LookAt = a 
+        Sileana.LookAt = a 
     end
 })
 
 TargetAimSection:Toggle({
     Name = "View",
     Callback = function(a)
-        Psalms.Tech.ViewAt = a 
+        Sileana.ViewAt = a 
     end
 })
 
@@ -3329,20 +3329,20 @@ TargetAimSection:Toggle({
     Name = "Anti Aim Viewer",
 Flag = "Anti Aim Viewer",
     Callback = function(a)
-        Psalms.Tech.AntiAimViewer  = a
+        Sileana.AntiAimViewer  = a
     end
 })
 TargetAimSection:Toggle({
     Name = "Auto Air",
 Flag = "Auto Air",
     Callback = function(a)
-        Psalms.Tech.AutoAir = a
+        Sileana.AutoAir = a
     end
 })
 TargetAimSection:Textbox({
     Name = "Auto Air Delay",
 Flag = "Auto Air Delay",
-  Default = tostring(Psalms.Tech.ShootDelay),
+  Default = tostring(Sileana.ShootDelay),
     Callback = function(a)
         targetSigm99928  = tonumber(a)
     end
@@ -3355,9 +3355,9 @@ Flag = "Locking Method",
         "Index", 
         "Namecall"
     },
-    Default = Psalms.Tech.LockType,
+    Default = Sileana.LockType,
     Callback = function(a)
-        Psalms.Tech.LockType = a
+        Sileana.LockType = a
     end
 })
 
@@ -3366,7 +3366,7 @@ local BulletHaha = SubPage1:Section({Name = "Gun Modification", Side = "Left"})
 BulletHaha:Toggle({
     Name = "Bullet TP",
     Callback = function(a)
-        Psalms.Tech.bool_at_tp = a
+        Sileana.bool_at_tp = a
     end
 })
 
@@ -3425,7 +3425,7 @@ Flag = "HitPart",
     },
     Default = "HumanoidRootPart",
     Callback = function(a)
-        Psalms.Tech.RealPart = a
+        Sileana.RealPart = a
     end
 })
 HitPartSection:List({
@@ -3440,7 +3440,7 @@ Flag = "AirPart",
     },
     Default = "RightFoot",
     Callback = function(a)
-        Psalms.Tech.AirPart = a
+        Sileana.AirPart = a
     end
 })
 
@@ -3450,7 +3450,7 @@ PredictionSection:Toggle({
 Flag = "DivisionTarget",
     Default = false,
     Callback = function(a)
-        Psalms.Tech.UseVertical = a
+        Sileana.UseVertical = a
     end
 })
 
@@ -3461,10 +3461,10 @@ PredictionSection:Textbox({
 Flag = "Horizontal Prediction X",
     Default = 0.1,
     Callback = function(a)
-        Psalms.Tech.HorizontalPrediction2 = tonumber(a) or 0.1
+        Sileana.HorizontalPrediction2 = tonumber(a) or 0.1
 task.wait(0.01)
-Psalms.Tech.HorizontalPrediction = Psalms.Tech.HorizontalPrediction2
-    Psalms.Tech.VerticalPrediction = Psalms.Tech.VerticalPrediction2
+Sileana.HorizontalPrediction = Sileana.HorizontalPrediction2
+    Sileana.VerticalPrediction = Sileana.VerticalPrediction2
     end
 })
 PredictionSection:Textbox({
@@ -3472,33 +3472,33 @@ PredictionSection:Textbox({
 Flag = "Vertical Prediction Y",
     Default = 0.1,
     Callback = function(a)
-        Psalms.Tech.VerticalPrediction2 = tonumber(a) or 0.1
+        Sileana.VerticalPrediction2 = tonumber(a) or 0.1
 task.wait(0.01)
-Psalms.Tech.HorizontalPrediction = Psalms.Tech.HorizontalPrediction2
-    Psalms.Tech.VerticalPrediction = Psalms.Tech.VerticalPrediction2
+Sileana.HorizontalPrediction = Sileana.HorizontalPrediction2
+    Sileana.VerticalPrediction = Sileana.VerticalPrediction2
     end
 })
 PredictionSection:Textbox({
     Name = "Jump offset",
 Flag = "JumpOffset",
-    Default = Psalms.Tech.jumpoffset2,
+    Default = Sileana.jumpoffset2,
     Callback = function(a)
-        Psalms.Tech.jumpoffset2 = tonumber(a)
+        Sileana.jumpoffset2 = tonumber(a)
     end
 })
 PredictionSection:Textbox({
     Name = "Fall offset",
 Flag = "FallOffset",
-    Default = Psalms.Tech.jumpoffset3,
+    Default = Sileana.jumpoffset3,
     Callback = function(a)
-        Psalms.Tech.jumpoffset3 = tonumber(a)
+        Sileana.jumpoffset3 = tonumber(a)
     end
 })
 PredictionSection:Toggle({
     Name = "Visualize",
 Flag = "Visualize",
     Callback = function(a)
-        Psalms.Tech.VelocityDot = a
+        Sileana.VelocityDot = a
     end
 }) 
 
@@ -3506,7 +3506,7 @@ PredictionSection:Toggle({
     Name = "Resolver",
 Flag = "Target Resolver",
     Callback = function(a)
-        Psalms.Tech.ResolverEnabled = a
+        Sileana.ResolverEnabled = a
     end
 })
 
@@ -3515,9 +3515,9 @@ PredictionSection:Toggle({
     Name = "Auto Prediction",
 Flag = "Target Auto Prediction",
     Callback = function(a)
-        Psalms.Tech.AutoPrediction = a
-     Psalms.Tech.HorizontalPrediction = Psalms.Tech.HorizontalPrediction2
-    Psalms.Tech.VerticalPrediction = Psalms.Tech.VerticalPrediction2
+        Sileana.AutoPrediction = a
+     Sileana.HorizontalPrediction = Sileana.HorizontalPrediction2
+    Sileana.VerticalPrediction = Sileana.VerticalPrediction2
     end
 })
 PredictionSection:List({
@@ -3529,9 +3529,9 @@ Flag = "Auto Prediction Mode",
         "Sets Based",
         "Calculate"
     },
-    Default = Psalms.Tech.APMODE,
+    Default = Sileana.APMODE,
     Callback = function(a)
-        Psalms.Tech.APMODE = a
+        Sileana.APMODE = a
     end
 })
 PredictionSection:List({
@@ -3544,7 +3544,7 @@ Flag = "Resolver Method",
     },
     Default = "MoveDirection",
     Callback = function(a)
-        Psalms.Tech.RESOLVER  = a
+        Sileana.RESOLVER  = a
     end
 })
 
@@ -3554,7 +3554,7 @@ Checks:Toggle({
     Name = "KnockOut",
 Flag = "KO",
     Callback = function(a)
-        Psalms.Tech.KOCheck = a
+        Sileana.KOCheck = a
     end
 })
 
@@ -3562,7 +3562,7 @@ Checks:Toggle({
     Name = "Wall",
 Flag = "Wall",
     Callback = function(a)
-        Psalms.Tech.WallCheck = a
+        Sileana.WallCheck = a
     end
 })
 
@@ -3570,7 +3570,7 @@ Checks:Toggle({
     Name = "Friend",
 Flag = "Friend",
     Callback = function(a)
-        Psalms.Tech.FriendCheck  = a
+        Sileana.FriendCheck  = a
     end
 })
 
@@ -3578,7 +3578,7 @@ Checks:Toggle({
     Name = "Vehicle",
 Flag = "Vehicle",
     Callback = function(a)
-        Psalms.Tech.SeatedCheck = a
+        Sileana.SeatedCheck = a
     end
 })
 
@@ -3586,7 +3586,7 @@ Checks:Toggle({
     Name = "Team", 
 Flag = "Team",
     Callback = function(a)
-        Psalms.Tech.TeamCheck = a
+        Sileana.TeamCheck = a
     end
 })
 
@@ -3718,8 +3718,8 @@ end
         return humanoid:PlayEmoteAndGetAnimTrackById(id)
     end
 
-   humanoidplayemote(Vars.BackpackData.Humanoid, MacroEmote[Psalms.Tech.MacroDance])
-    task.wait(Psalms.Tech.MacroDanceDelay)
+   humanoidplayemote(Vars.BackpackData.Humanoid, MacroEmote[Sileana.MacroDance])
+    task.wait(Sileana.MacroDanceDelay)
 
     local items = {}
     for _, item in pairs(Vars.BackpackData.Backpack:GetChildren()) do
@@ -3745,7 +3745,7 @@ local OKNigger = nil
 
 RunService.RenderStepped:Connect(function(DeltaTime)
     TimeElapsed = TimeElapsed + DeltaTime
-    if TimeElapsed >= Psalms.Tech.MacroSpeed then
+    if TimeElapsed >= Sileana.MacroSpeed then
         
         if Vars.State.MCenabled then
             if not OKNigger then
@@ -3782,16 +3782,16 @@ Flag = "Emote afro",
     Options = {"YungBlud", "Nimbus", "Fishing", "VPose", "BouncyTwirl", "Borocks"},
     Default = "YungBlud",
     Callback = function(a)
-        Psalms.Tech.MacroDance = a
+        Sileana.MacroDance = a
     end
 })
 
 MTSectionS:Textbox({
     Name = "Latency",
 Flag = "Macro Latency",
-    Default = tostring(Psalms.Tech.MacroDanceDelay),
+    Default = tostring(Sileana.MacroDanceDelay),
     Callback = function(a)
-        Psalms.Tech.MacroDanceDelay = tonumber(a)
+        Sileana.MacroDanceDelay = tonumber(a)
     end
 })
 
@@ -3799,9 +3799,9 @@ Flag = "Macro Latency",
 MTSectionS:Textbox({
     Name = "Speed",
 Flag = "Macro Speed",
-    Default = tostring(Psalms.Tech.MacroSpeed),
+    Default = tostring(Sileana.MacroSpeed),
     Callback = function(a)
-        Psalms.Tech.MacroSpeed = tonumber(a)
+        Sileana.MacroSpeed = tonumber(a)
     end
 })
 
@@ -3825,7 +3825,7 @@ if dog then
 
     local humanoid = LocalPlayer.Character:WaitForChild("Humanoid")
 
-    humanoid.WalkSpeed = Psalms.Tech.MacroSpeed * 1000
+    humanoid.WalkSpeed = Sileana.MacroSpeed * 1000
     humanoid.JumpPower = 80
 
 if not dog then
@@ -3835,7 +3835,7 @@ end
 
     humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
 if dog then
-        humanoid.WalkSpeed = Psalms.Tech.MacroSpeed * 1000
+        humanoid.WalkSpeed = Sileana.MacroSpeed * 1000
 
 end
     end)
@@ -3908,23 +3908,23 @@ local function SigmaOhioPlayer()
     for _, v in pairs(game.Players:GetPlayers()) do
         if v ~= player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") 
            and v.Character.Humanoid.Health > 0 then
-            if Psalms.Tech.FriendCheck and player:IsFriendsWith(v.UserId) then
+            if Sileana.FriendCheck and player:IsFriendsWith(v.UserId) then
                 continue
             end
 
-if Psalms.Tech.TeamCheck and isPlayerOnSameTeam(v) then
+if Sileana.TeamCheck and isPlayerOnSameTeam(v) then
     continue
 end
 
-            if Psalms.Tech.KOCheck and isPlayerKO(v) then
+            if Sileana.KOCheck and isPlayerKO(v) then
                 continue
             end
 
-            if Psalms.Tech.SeatedCheck and isPlayerSeated(v) then
+            if Sileana.SeatedCheck and isPlayerSeated(v) then
                 continue
             end
 
-            if Psalms.Tech.WallCheck and BehindWall(v) then
+            if Sileana.WallCheck and BehindWall(v) then
                 continue
             end
 
@@ -3988,7 +3988,7 @@ RunService.Heartbeat:Connect(function(DeltaTime)
     
     if PussyTime >= 0.1 and TargBindEnabled then
         if TargetPlr and TargetPlr.Character and TargetPlr.Character:FindFirstChild("Humanoid") then
-            if Psalms.Tech.UnlockOnKO and isPlayerKO(TargetPlr)  then
+            if Sileana.UnlockOnKO and isPlayerKO(TargetPlr)  then
                 toggleLock()
                 return
             end
@@ -4072,7 +4072,7 @@ MTP:Toggle({
     Name = "Unlock On Death",
 Flag = "Unlock On Death",
     Callback = function(a)
-        Psalms.Tech.UnlockOnKO = a
+        Sileana.UnlockOnKO = a
     end
 })
 
@@ -4143,7 +4143,7 @@ PoAnimate2:Button({
         
         AutoShootButton = true
         MakeButton("Shoot", Color3.fromRGB(85, 85, 85), function(state)
-            Psalms.Tech.AutoShoot = state
+            Sileana.AutoShoot = state
         end)
     end
 })
@@ -4154,7 +4154,7 @@ Bumt:Toggle({
     Name = "Enabled",
 Flag = "Camera",
     Callback = function(a)
-        Psalms.Tech.Camera = a
+        Sileana.Camera = a
     end
 })
 Bumt:Toggle({
@@ -4168,22 +4168,22 @@ Bumt:Toggle({
     Name = "Division",
 Flag = "Cam Division",
     Callback = function(a)
-        Psalms.Tech.UseExternal = a
+        Sileana.UseExternal = a
     end
 })
 Bumt:Toggle({
     Name = "Resolver",
 Flag = "Cam Resolver",
     Callback = function(a)
-        Psalms.Tech.CamResolverEnabled = a
+        Sileana.CamResolverEnabled = a
     end
 })
 Bumt:Textbox({
     Name = "Camera Smoothness",
 Flag = "Cam Smoothness",
-    Default = tostring(Psalms.Tech.smoothness),
+    Default = tostring(Sileana.smoothness),
     Callback = function(a)
-        Psalms.Tech.smoothness = tonumber(a)
+        Sileana.smoothness = tonumber(a)
     end
 })
 
@@ -4193,18 +4193,18 @@ Bumt:List({
         "Linear", "Quad", "Cubic", "Quart", "Quint", "Sine", 
         "Exponential", "Circular", "Back", "Bounce", "Elastic"
     },
-    Default = Psalms.Tech.easingStyle,
+    Default = Sileana.easingStyle,
     Callback = function(a)
-        Psalms.Tech.easingStyle = a
+        Sileana.easingStyle = a
     end
 })
 
 Bumt:List({
     Name = "Easing Direction",
     Options = {"In", "Out", "InOut"},
-    Default = Psalms.Tech.easingDirection,
+    Default = Sileana.easingDirection,
     Callback = function(a)
-        Psalms.Tech.easingDirection = a
+        Sileana.easingDirection = a
     end
 })
 
@@ -4214,14 +4214,14 @@ Bumt:Toggle({
     Name = "Wall",
 Flag = "Cam WallCheck",
     Callback = function(a)
-        Psalms.Tech.CamWallCheck = a
+        Sileana.CamWallCheck = a
     end
 })
 Bumt:Toggle({
     Name = "Knocked",
 Flag = "Cam Ko",
     Callback = function(a)
-        Psalms.Tech.CAMKo = a
+        Sileana.CAMKo = a
     end
 })
 
@@ -4237,8 +4237,8 @@ Flag = "Cam HPred",
     Callback = function(a)
         camgay2 = tonumber(a)
 task.wait(0.01)
-Psalms.Tech.CamPrediction2 = camgay
-      Psalms.Tech.CamPrediction1 = camgay2
+Sileana.CamPrediction2 = camgay
+      Sileana.CamPrediction1 = camgay2
     end
 })
 CamPred:Textbox({
@@ -4248,8 +4248,8 @@ Flag = "Cam VPred",
     Callback = function(a)
         camgay = tonumber(a)
 task.wait(0.01)
-Psalms.Tech.CamPrediction2 = camgay
-      Psalms.Tech.CamPrediction1 = camgay2
+Sileana.CamPrediction2 = camgay
+      Sileana.CamPrediction1 = camgay2
     end
 })
 
@@ -4257,9 +4257,9 @@ CamPred:Toggle({
     Name = "AutoPred",
 Flag = "Auto Prediction",
     Callback = function(a)
-        Psalms.Tech.CamAutoprediction = a
-       Psalms.Tech.CamPrediction2 = camgay
-      Psalms.Tech.CamPrediction1 = camgay2
+        Sileana.CamAutoprediction = a
+       Sileana.CamPrediction2 = camgay
+      Sileana.CamPrediction1 = camgay2
     end
 })
 
@@ -4331,7 +4331,7 @@ MTSection1:Toggle({
     Name = "Jump Prediction",
 Flag = "Jump Pred Anti",
     Callback = function(a)
-        Psalms.Tech.JumpBreak = a
+        Sileana.JumpBreak = a
     end
 })
 MTSection1:Toggle({
@@ -5086,7 +5086,7 @@ fuv:Toggle({
     Name = "Silent",
 Flag = "SilentEnabled",
     Callback = function(dang)
-        Psalms.Tech.SilentMode = dang
+        Sileana.SilentMode = dang
     end
 })
 
@@ -5214,7 +5214,7 @@ Dog11:Button({
         
         MacroAlreadLoaded = true
         MakeButton("Speed", Color3.fromRGB(103, 103, 103), function(state)
-            Psalms.Tech.cframespeedtoggle = state
+            Sileana.cframespeedtoggle = state
         end)
     end
 })
@@ -5232,7 +5232,7 @@ Dog11:Button({
 
 
 
-speeds = Psalms.Tech.speedvalue
+speeds = Sileana.speedvalue
 
 local speaker = game:GetService("Players").LocalPlayer
 
@@ -5473,7 +5473,7 @@ Flag = "Fly CFrame Speed",
     Suffix = "%",
     Decimals = 000.1,
     Callback = function(a)
-        Psalms.Tech.speedvalue = a
+        Sileana.speedvalue = a
     end
 })
 local CSyncSection = SubPage6:Section({Name = "CSync", Side = "Right"})
@@ -5736,8 +5736,8 @@ end)
 do
     local CFG = Settings:Section({Name = "Config", Zindex = 2})
 --
-if not isfolder("Psalms") then makefolder("Psalms") end
-if not isfolder("Psalms/Configs") then makefolder("Psalms/Configs") end
+if not isfolder("Sileana") then makefolder("Psalms") end
+if not isfolder("Sileana/Configs") then makefolder("Sileana/Configs") end
 
 local ConfigList = CFG:List({Name = "Config", Flag = "SettingConfigurationList", Options = {}})
 CFG:Textbox({Flag = "SettingsConfigurationName", Name = "Config Name"})
@@ -5746,8 +5746,8 @@ local CurrentList = {}
 
 local function UpdateConfigList()
     local List = {}
-    for _, file in ipairs(listfiles("Psalms/Configs")) do
-        local FileName = file:match("Psalms/Configs/(.+)%.cfg")
+    for _, file in ipairs(listfiles("Sileana/Configs")) do
+        local FileName = file:match("Sileana/Configs/(.+)%.cfg")
         if FileName then
             table.insert(List, FileName)
         end
@@ -5762,8 +5762,8 @@ end
 
 CFG:Button({Name = "Create", Callback = function()
     local ConfigName = Flags.SettingsConfigurationName
-    if ConfigName and ConfigName ~= "" and not isfile("Psalms/Configs/" .. ConfigName .. ".cfg") then
-        writefile("Psalms/Configs/" .. ConfigName .. ".cfg", "")
+    if ConfigName and ConfigName ~= "" and not isfile("Sileana/configs/" .. ConfigName .. ".cfg") then
+        writefile("Sileana/configs/" .. ConfigName .. ".cfg", "")
         UpdateConfigList()
     end
 end})
@@ -5771,22 +5771,22 @@ end})
 CFG:Button({Name = "Save", Callback = function()
     local SelectedConfig = Flags.SettingConfigurationList
     if SelectedConfig then
-        writefile("Psalms/Configs/" .. SelectedConfig .. ".cfg", Library:GetConfig())
+        writefile("Sileana/configs/" .. SelectedConfig .. ".cfg", Library:GetConfig())
     end
 end})
 
 CFG:Button({Name = "Load", Callback = function()
     local SelectedConfig = Flags.SettingConfigurationList
     if SelectedConfig then
-        local Content = readfile("Psalms/Configs/" .. SelectedConfig .. ".cfg")
+        local Content = readfile("Sileana/configs/" .. SelectedConfig .. ".cfg")
         Library:LoadConfig(Content)
     end
 end})
 
 CFG:Button({Name = "Delete", Callback = function()
     local SelectedConfig = Flags.SettingConfigurationList
-    if SelectedConfig and isfile("Psalms/Configs/" .. SelectedConfig .. ".cfg") then
-        delfile("Psalms/Configs/" .. SelectedConfig .. ".cfg")
+    if SelectedConfig and isfile("Sileana/configs/" .. SelectedConfig .. ".cfg") then
+        delfile("Sileana/configs/" .. SelectedConfig .. ".cfg")
         UpdateConfigList()
     end
 end})
@@ -5823,7 +5823,7 @@ end})
             Watermark:SetVisible(State)
         end
     })
-local waterbitch = "Psalms.Tech"
+local waterbitch = "Sileana"
 CFG:Toggle({
     Name = "Update",
     Flag = "CustomMark",
@@ -5838,7 +5838,7 @@ CFG:Toggle({
     CFG:Textbox({
         Flag = "WatermarkText",
         Name = "Watermark Text",
-        State = "$$ Psalms.Tech $$", 
+        State = "$$ Sileana $$", 
         Callback = function(State)
             waterbitch = State
       if not stats.Update then
